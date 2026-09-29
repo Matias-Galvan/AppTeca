@@ -1,0 +1,41 @@
+package com.example.appteca
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+
+class DetalleActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_detalle)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        val appId = intent.getIntExtra("appId", -1)
+        val app = Catalogo.apps.find { it.id == appId }
+
+        if (app == null) { finish(); return }
+
+        findViewById<TextView>(R.id.tvDetNombre).text = app.nombre
+        findViewById<TextView>(R.id.tvDetCategoria).text = app.categoria
+        findViewById<TextView>(R.id.tvDetDescripcion).text = app.descripcion
+
+        val btn = findViewById<Button>(R.id.btnFavorito)
+        fun pintar() {
+            btn.text = if (app.esFavorita) "★ Quitar de favoritas" else "☆ Marcar favorita"
+        }
+        pintar()
+        btn.setOnClickListener {
+            app.esFavorita = !app.esFavorita
+            pintar()
+        }
+    }
+}
