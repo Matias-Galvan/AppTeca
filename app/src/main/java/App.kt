@@ -5,4 +5,4 @@ data class App(
     val categoria: String,
     val descripcion: String,
     var esFavorita: Boolean = false
-) 
+)
